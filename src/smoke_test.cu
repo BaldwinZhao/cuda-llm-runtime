@@ -2,6 +2,7 @@
 #include <cuda_runtime.h>
 #include <cstdlib>
 #include <iostream>
+#include "check_error.cuh"
 
 #define VALUE 43
 
@@ -13,14 +14,15 @@ __global__ void write_value(int* output, int value) {
 	output[0] = value;
 }
 
+
 int main() {
 
 	int* device_output = nullptr;
 	int host_output = 0;
 
-	cudaError_t status = cudaMalloc(&device_output, sizeof(device_output));
-	if (status != cudaSuccess) {
-		std::cerr << "cudaMalloc Failed: " << cudaGetErrorString(status) << '\n';
+	cudaError_t status = cudaMalloc(&device_output, sizeof(*device_output));
+
+	if (check_error(status, "cudaMalloc Failed:")) {
 		return EXIT_FAILURE;
 	}
 
@@ -29,7 +31,7 @@ int main() {
 	// work 1
 	write_value<<<1, 1>>>(device_output, VALUE);
 	// work 2 : 44 != VALUE
-	write_value<<<1, 1>>>(device_output, 44);
+	// write_value<<<1, 1>>>(device_output, 44);
 
 	status = cudaGetLastError();
 	if (status == cudaSuccess) {
@@ -41,8 +43,12 @@ int main() {
 
 	const cudaError_t free_status = cudaFree(device_output);
 
-	if (status != cudaSuccess || free_status != cudaSuccess) {
-		std::cerr << "cuda failed\n";
+	if (check_error(status, "cuda failed. ")) {
+		return EXIT_FAILURE;
+	}
+
+	if (check_error(free_status, "cuda failed. ")) {
+		return EXIT_FAILURE;
 	}
 
 	if (host_output != VALUE) {

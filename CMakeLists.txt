@@ -19,3 +19,14 @@ set_target_properties(cuda_smoke PROPERTIES
 	CUDA_STANDARD 17
 	CUDA_STANDARD_REQUIRED ON
 )
+
+add_executable(test_add
+	src/add.cu
+)
+
+set_target_properties(test_add PROPERTIES
+	CXX_STANDARD 17
+	CXX_STANDARD_REQUIRED ON
+	CUDA_STANDARD 17
+	CUDA_STANDARD_REQUIRED ON
+)

@@ -3,4 +3,5 @@
 
 build*/
 .venv/
-benchmarks/__pycache__/
+benchmarks/__pycache__/*
+__pycache__/

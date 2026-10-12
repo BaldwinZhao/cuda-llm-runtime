@@ -13,6 +13,8 @@ def parse_args():
     parser.add_argument("--n", type=int, required=True)
     parser.add_argument("--repeats", type=int, required=True)
     parser.add_argument("--warmup", type=int, required=True)
+    parser.add_argument("--dtype", type=str, default="float32")
+    parser.add_argument("--output", type=str, default="result.json")
     args = parser.parse_args()
     if args.repeats <= 1 or args.warmup < 0 or args.n <= 0 or args.k <= 0 or args.m <= 0:
         print("arg invalid")
